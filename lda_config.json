@@ -6,8 +6,8 @@
         1843,
         6
       ],
-      "tensorPath": "https://raw.githubusercontent.com/parulsethi/LdaViz/master/lda_tensor.tsv",
-      "metadataPath": "https://raw.githubusercontent.com/parulsethi/LdaViz/master/lda_metadata.tsv"
+      "tensorPath": "https://raw.githubusercontent.com/parulsethi/LdaProjector/master/lda_tensor.tsv",
+      "metadataPath": "https://raw.githubusercontent.com/parulsethi/LdaProjector/master/lda_metadata.tsv"
     }
   ]
 }
