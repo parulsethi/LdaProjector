@@ -1,0 +1,13 @@
+{
+  "embeddings": [
+    {
+      "tensorName": "Movie Plots LDA Embeddings",
+      "tensorShape": [
+        1843,
+        10
+      ],
+      "tensorPath": "https://raw.githubusercontent.com/parulsethi/LdaProjector/master/word_lda_tensor.tsv",
+      "metadataPath": "https://raw.githubusercontent.com/parulsethi/LdaProjector/master/word_lda_metadata.tsv"
+    }
+  ]
+}
