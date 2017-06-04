@@ -27,6 +27,7 @@ for line in dataframe.Plots:
     words = re.findall(r'\w+', lowered, flags = re.UNICODE | re.LOCALE)
     texts.append(words)
 dictionary = Dictionary(texts)
+# Filter out words that occur less than 0 documents, or more than 30% of the documents.
 dictionary.filter_extremes(no_below=0, no_above=0.3)
 corpus = [dictionary.doc2bow(text) for text in texts]
 
@@ -67,19 +68,15 @@ with open('doc_lda_metadata.tsv','w') as w:
 
 # Plot word topics
 topics = []
-tensors = []
 for i in range(len(model.id2word)):
     topics.append(model.get_term_topics(i,0))
 
 # create file for tensors
 with open('word_lda_tensor.tsv','w') as w:
     for t in topics:
-        word_tensor = []
         for ids in t:
-            word_tensor.append(ids[1])
             w.write(str(ids[1])+"\t")
         w.write("\n")
-        tensors.append(word_tensor)
 
 # create file for metadata
 with open('word_lda_metadata.tsv','w') as w:
