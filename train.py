@@ -1,6 +1,4 @@
-import gensim
 import pandas as pd
-import smart_open
 import random
 import re
 import logging
@@ -32,28 +30,31 @@ dictionary.filter_extremes(no_below=0, no_above=0.3)
 corpus = [dictionary.doc2bow(text) for text in texts]
 
 # Set training parameters.
-num_topics = 10
+num_topics = 6
 chunksize = 2000
-passes = 20
-iterations = 200
-eval_every = True
+passes = 50
+iterations = 100
+eval_every = None
 
 # train model
 model = ldamodel.LdaModel(corpus=corpus, id2word=dictionary, chunksize=chunksize, alpha='auto', eta='auto', iterations=iterations, num_topics=num_topics, passes=passes, eval_every=eval_every)
 
 # Get document topics
-all_topics = model.get_document_topics(corpus, minimum_probability=0, per_word_topics=True)
+doc_topics = model.get_document_topics(corpus, minimum_probability=0)
 
 tensors = []
 # create file for tensors
 with open('doc_lda_tensor.tsv','w') as w:
-    for doc_topics, word_topics, phi_values in all_topics:
+    for doc_topic in doc_topics:
         doc_tensor = []
-        for topics in doc_topics:
-            doc_tensor.append(topics[1])
-            w.write(str(topics[1])+ "\t")
+        for topic in doc_topic:
+            doc_tensor.append((topic[0], float(round(topic[1], 3))))
+            w.write(str(topic[1])+ "\t")
         w.write("\n")
-        tensors.append(doc_tensor)
+        # sort topics according to highest probabilities
+        doc_tensor = sorted(doc_tensor, key=lambda x: x[1], reverse=True)
+        # store vectors to add in metadata file
+        tensors.append(doc_tensor[:6])
 
 
 # create file for metadata
@@ -64,22 +65,4 @@ with open('doc_lda_metadata.tsv','w') as w:
         w.write("%s\t%s\n" % (''.join((str(j), str(tensors[i]))),k))
         i+=1
 
-#  --------------------------------------------------------------------
-
-# Plot word topics
-topics = []
-for i in range(len(model.id2word)):
-    topics.append(model.get_term_topics(i,0))
-
-# create file for tensors
-with open('word_lda_tensor.tsv','w') as w:
-    for t in topics:
-        for ids in t:
-            w.write(str(ids[1])+"\t")
-        w.write("\n")
-
-# create file for metadata
-with open('word_lda_metadata.tsv','w') as w:
-    for i in range(len(model.id2word)):
-        w.write(model.id2word[i]+"\n")
 
